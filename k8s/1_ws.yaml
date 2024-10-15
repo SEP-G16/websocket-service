@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-deployment
+  labels:
+    app: websocket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket
+  template:
+    metadata:
+      labels:
+        app: websocket
+    spec:
+      containers:
+      - name: websocket
+        image: us-central1-docker.pkg.dev/stone-album-437618-f8/hrmis-artifact-registry/websocket-service
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5500
+        resources:
+          requests:
+            memory: "256Mi"   
+            cpu: "128m"       
+          limits:
+            memory: "512Mi"   
+            cpu: "256m"
+        env:
+          - name: RABBITMQ_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: hrmis-config-map
+                key: SPRING_RABBITMQ_HOST
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket
+spec:
+  selector:
+    app: websocket
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5500
