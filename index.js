@@ -16,9 +16,14 @@ io.on("connection", (socket) => {
     io.emit("readHelpRequest", data);
   });
 
-  rabbitMessageReceiver(function (msg) {
-    io.emit("readOrderStatusUpdate", msg);
-  });
+  rabbitMessageReceiver(
+    function (msg) {
+      io.emit("readOrderStatusUpdate", msg);
+    },
+    function (_) {
+      io.emit("readOrderAdded");
+    }
+  );
 });
 
 server.listen(5500, () => {
