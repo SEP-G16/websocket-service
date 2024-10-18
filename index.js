@@ -22,6 +22,10 @@ io.on("connection", (socket) => {
     },
     function (_) {
       io.emit("readOrderAdded");
+    },
+
+    function(msg){
+      io.emit("readUpdateMenuItemStatus", msg);
     }
   );
 });

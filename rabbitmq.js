@@ -7,6 +7,7 @@ let rabbitMqHost = process.env.RABBITMQ_HOST || 'localhost'
 export default function rabbitMessageReceiver(
   onSendOrderStatusUpdate,
   onSendOrderAdded,
+  onUpdateMenuItemStatus,
 ){
   amqp.connect(`amqp://${rabbitMqHost}`, function(error0, connection) {
     if (error0) {
@@ -49,6 +50,22 @@ export default function rabbitMessageReceiver(
   
         channel.consume(q.queue, function(msg) {
           onSendOrderAdded(msg.content.toString());
+        }, {
+          noAck: true
+        });
+      });
+
+      channel.assertQueue('', {
+        exclusive: true
+        }, function(error2, q) {
+          if (error2) {
+            throw error2;
+          }
+        
+        channel.bindQueue(q.queue, exchange, 'updateMenuItemStatus');
+  
+        channel.consume(q.queue, function(msg) {
+          onUpdateMenuItemStatus(msg.content.toString());
         }, {
           noAck: true
         });
