@@ -7,6 +7,9 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   path: "/ws",
+  cors: {
+    origin: "*",
+  }
 });
 
 io.on("connection", (socket) => {
@@ -16,7 +19,7 @@ io.on("connection", (socket) => {
     io.emit("readHelpRequest", data);
   });
 
-  socket.onReadyToPay("onReadyToPay", (data) => {
+  socket.on("onReadyToPay", (data) => {
     io.emit("readReadyToPay", data);
   });
 
