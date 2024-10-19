@@ -16,6 +16,10 @@ io.on("connection", (socket) => {
     io.emit("readHelpRequest", data);
   });
 
+  socket.onReadyToPay("onReadyToPay", (data) => {
+    io.emit("readReadyToPay", data);
+  });
+
   rabbitMessageReceiver(
     function (msg) {
       io.emit("readOrderStatusUpdate", msg);
