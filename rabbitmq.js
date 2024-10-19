@@ -7,7 +7,7 @@ let rabbitMqHost = process.env.RABBITMQ_HOST || 'localhost'
 export default function rabbitMessageReceiver(
   onSendOrderStatusUpdate,
   onSendOrderAdded,
-  onUpdateMenuItemStatus,
+  onUpdateMenuItemStatus
 ){
   amqp.connect(`amqp://${rabbitMqHost}`, function(error0, connection) {
     if (error0) {
